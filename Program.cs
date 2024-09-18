@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
-using InscripcionExamenes.Models;
+using VentaProductos.Models;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -47,28 +47,10 @@ function MostrarProductos(data) {
         td6.appendChild(btnEliminar);
     });
 }
-// function MostrarProductos(data) {
-//     $("#todosLosProductos").empty();
-//     $.each(data, function(index, item) {
-//         $('#todosLosProductos').append(
-//             "<tr>",
-//             "<td>" + item.id + "</td>",
-//             "<td>" + item.nombreProducto + "</td>",
-//             "<td>" + item.cantidad + "</td>",
-//             "<td>" + item.precioVenta + "</td>",
-//             "<td>" + item.precioCompra + "</td>",
-//             "<td><button class='btn btn-info' onclick='BuscarProductoId(" + item.id + ")'>Modificar</button></td>",
-//             "<td><button class='btn btn-danger' onclick='EliminarProducto(" + item.id + ")'>Eliminar</button></td>",
-//             "</tr>"
-//         )
-//     })
-// }
+
 
 function CrearProducto() {
-    // var nombreProd = document.getElementById("Nombre").value;
-    // if (nombreProd == "" || nombreProd == null) {
-    //     return mensajesError('#error', null, "Por favor ingrese un Nombre para el Producto.");
-    // }
+
 
     let producto = {
         nombreProducto: document.getElementById("Nombre").value,
@@ -88,7 +70,7 @@ function CrearProducto() {
     )
     .then(response => response.json())
     .then(data =>{
-        // if(data.status == undefined){
+      
             document.getElementById("Nombre").value = "";
             document.getElementById("Cantidad").value = 0;
             document.getElementById("PrecioVenta").value = 0;
@@ -96,9 +78,7 @@ function CrearProducto() {
 
             $('#modalAgregarProductos').modal('hide');
             ObtenerProductos();
-        // } else {
-        //     mensajesError('#error', data);
-        // }
+    
             
     })
     .catch(error => console.log("Hubo un error al guardar el Producto nuevo, verifique el mensaje de error: ", error))
@@ -174,24 +154,3 @@ function EditarProducto() {
 }
 
 
-// function mensajesError(id, data, mensaje) {
-//     $(id).empty();
-//     if (data != null) {
-//         $.each(data.errors, function(index, item) {
-//             $(id).append(
-//                 "<ol>",
-//                 "<li>" + item + "</li>",
-//                 "</ol>"
-//             )
-//         })
-//     }
-//     else{
-//         $(id).append(
-//             "<ol>",
-//             "<li>" + mensaje + "</li>",
-//             "</ol>"
-//         )
-//     }
-    
-//     $(id).attr("hidden", false);
-// }
