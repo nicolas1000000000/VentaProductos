@@ -1,8 +1,8 @@
 function ObtenerProductos() {
     fetch('https://localhost:7245/Productos')
-    .then(response => response.json())
-    .then(data => MostrarProductos(data))
-    .catch(error => console.log("No se pudo acceder al servicio.", error));
+        .then(response => response.json())
+        .then(data => MostrarProductos(data))
+        .catch(error => console.log("No se pudo acceder al servicio.", error));
 }
 
 function MostrarProductos(data) {
@@ -47,43 +47,78 @@ function MostrarProductos(data) {
         td6.appendChild(btnEliminar);
     });
 }
-
+// function MostrarProductos(data) {
+//     $("#todosLosProductos").empty();
+//     $.each(data, function(index, item) {
+//         $('#todosLosProductos').append(
+//             "<tr>",
+//             "<td>" + item.id + "</td>",
+//             "<td>" + item.nombreProducto + "</td>",
+//             "<td>" + item.cantidad + "</td>",
+//             "<td>" + item.precioVenta + "</td>",
+//             "<td>" + item.precioCompra + "</td>",
+//             "<td><button class='btn btn-info' onclick='BuscarProductoId(" + item.id + ")'>Modificar</button></td>",
+//             "<td><button class='btn btn-danger' onclick='EliminarProducto(" + item.id + ")'>Eliminar</button></td>",
+//             "</tr>"
+//         )
+//     })
+// }
 
 function CrearProducto() {
 
+    var nombreProd = document.getElementById("Nombre").value;
+    if (nombreProd == "" || nombreProd == null) {
+        return mensajesError('#error', null, "Por favor ingrese un Nombre.");
+    }
+
+    var cantidad = document.getElementById("Cantidad").value;
+    if (cantidad == "" || cantidad == null || parseInt(cantidad) < 0) {
+        return mensajesError('#error', null, "Por favor ingrese una Cantidad.");
+    }
+
+    var precioVenta = document.getElementById("PrecioVenta").value;
+    if (precioVenta == "" || precioVenta == null || parseFloat(precioVenta) < 0) {
+        return mensajesError('#error', null, "Por favor ingrese un Precio de Venta.");
+    }
+
+    var precioCompra = document.getElementById("PrecioCompra").value;
+    if (precioCompra == "" || precioCompra == null || parseFloat(precioCompra) < 0) {
+        return mensajesError('#error', null, "Por favor ingrese un Precio de Compra.");
+    }
 
     let producto = {
-        nombreProducto: document.getElementById("Nombre").value,
-        cantidad: document.getElementById("Cantidad").value,
-        precioVenta: document.getElementById("PrecioVenta").value,
-        precioCompra: document.getElementById("PrecioCompra").value,
+        nombreProducto: nombreProd,
+        cantidad: parseInt(cantidad),
+        precioVenta: parseFloat(precioVenta),
+        precioCompra: parseFloat(precioCompra)
     };
 
-    fetch('https://localhost:7245/Productos',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-              },
-            body: JSON.stringify(producto)
-        }
-    )
-    .then(response => response.json())
-    .then(data =>{
-      
-            document.getElementById("Nombre").value = "";
-            document.getElementById("Cantidad").value = 0;
-            document.getElementById("PrecioVenta").value = 0;
-            document.getElementById("PrecioCompra").value = 0;
-
-            $('#modalAgregarProductos').modal('hide');
-            ObtenerProductos();
-    
-            
+    fetch('https://localhost:7245/Productos', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(producto)
     })
-    .catch(error => console.log("Hubo un error al guardar el Producto nuevo, verifique el mensaje de error: ", error))
-}
+        .then(response => response.json())
+        .then(data => {
+            if (data.status == undefined) {
+                document.getElementById("Nombre").value = "";
+                document.getElementById("Cantidad").value = "";
+                document.getElementById("PrecioVenta").value = "";
+                document.getElementById("PrecioCompra").value = "";
 
+
+                $('#error').empty();
+                $('#error').attr("hidden", true);
+                $('#modalAgregarProductos').modal('hide');
+                ObtenerProductos();
+            } else {
+                mensajesError('#error', data);
+            }
+        })
+        .catch(error => console.log("Hubo un error al guardar el Producto nuevo, verifique el mensaje de error: ", error));
+}
 
 function EliminarProducto(id) {
     var siElimina = confirm("¿Esta seguro de borrar este producto?.")
@@ -94,36 +129,55 @@ function EliminarProducto(id) {
 
 function EliminarSi(id) {
     fetch(`https://localhost:7245/Productos/${id}`,
-    {
-        method: "DELETE"
-    })
-    .then(() => {
-        ObtenerProductos();
-    })
-    .catch(error => console.error("No se pudo acceder a la api, verifique el mensaje de error: ", error))
+        {
+            method: "DELETE"
+        })
+        .then(() => {
+            ObtenerProductos();
+        })
+        .catch(error => console.error("No se pudo acceder a la api, verifique el mensaje de error: ", error))
 }
-
 
 function BuscarProductoId(id) {
-    fetch(`https://localhost:7245/Productos/${id}`,{
+    fetch(`https://localhost:7245/Productos/${id}`, {
         method: "GET"
     })
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById("IdProducto").value = data.id;
-        document.getElementById("NombreEditar").value = data.nombreProducto;
-        document.getElementById("CantidadEditar").value = data.cantidad;
-        document.getElementById("PrecioVentaEditar").value = data.precioVenta;
-        document.getElementById("PrecioCompraEditar").value = data.precioCompra;
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("IdProducto").value = data.id;
+            document.getElementById("NombreEditar").value = data.nombreProducto;
+            document.getElementById("CantidadEditar").value = data.cantidad;
+            document.getElementById("PrecioVentaEditar").value = data.precioVenta;
+            document.getElementById("PrecioCompraEditar").value = data.precioCompra;
 
-        $('#modalEditarProductos').modal('show');
-    })
-    .catch(error => console.error("No se pudo acceder a la api, verifique el mensaje de error: ", error));
+            $('#modalEditarProductos').modal('show');
+        })
+        .catch(error => console.error("No se pudo acceder a la api, verifique el mensaje de error: ", error));
 }
-
 
 function EditarProducto() {
     let idProducto = document.getElementById("IdProducto").value;
+
+    var nombreProd = document.getElementById("NombreEditar").value;
+    if (nombreProd == "" || nombreProd == null ||
+        nombreProd.length < 3 || nombreProd.length > 100) {
+        return mensajesError('#errorEditar', null, "Por favor ingrese un Nombre que contenga entre 3 y 100 caracteres.");
+    }
+
+    var cantidad = document.getElementById("CantidadEditar").value;
+    if (cantidad == "" || cantidad == null || parseInt(cantidad) <0) {
+        return mensajesError('#errorEditar', null, "Por favor ingrese una Cantidad para el Producto.");
+    }
+
+    var precioVenta = document.getElementById("PrecioVentaEditar").value;
+    if (precioVenta == "" || precioVenta == null || parseFloat(precioVenta) < 0) {
+        return mensajesError('#errorEditar', null, "Por favor ingrese un Precio de Venta para el Producto.");
+    }
+
+    var precioCompra = document.getElementById("PrecioCompraEditar").value;
+    if (precioCompra == "" || precioCompra == null || parseFloat(precioCompra) < 0) {
+        return mensajesError('#errorEditar', null, "Por favor ingrese un Precio de Compra para el Producto.");
+    }
 
     let editarProducto = {
         id: idProducto,
@@ -140,17 +194,47 @@ function EditarProducto() {
         },
         body: JSON.stringify(editarProducto)
     })
-    .then(data => {
-
+        .then(data => {
             document.getElementById("IdProducto").value = 0;
             document.getElementById("NombreEditar").value = "";
             document.getElementById("CantidadEditar").value = 0;
             document.getElementById("PrecioVentaEditar").value = 0;
             document.getElementById("PrecioCompraEditar").value = 0;
+
+            $('#errorEditar').empty();
+            $('#errorEditar').attr("hidden", true);
             $('#modalEditarProductos').modal('hide');
             ObtenerProductos();
-    })
-    .catch(error => console.error("No se pudo acceder a la api, verifique el mensaje de error: ", error))
+        })
+        .catch(error => console.error("No se pudo acceder a la api, verifique el mensaje de error: ", error))
 }
+
+function mensajesError(id, data, mensaje) {
+    $(id).empty();
+    if (data != null) {
+        $.each(data.errors, function (index, item) {
+            $(id).append(
+                "<ol>",
+                "<li>" + item + "</li>",
+                "</ol>"
+            )
+        })
+    }
+    else {
+        $(id).append(
+            "<ol>",
+            "<li>" + mensaje + "</li>",
+            "</ol>"
+        )
+    }
+
+    $(id).attr("hidden", false);
+}
+
+
+
+
+
+
 
 
