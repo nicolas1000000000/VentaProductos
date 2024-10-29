@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using VentaProductos.Models;
+
 
 
 namespace VentaProductos.Models;
@@ -14,4 +14,9 @@ public class Context : DbContext
     public DbSet<Producto> Productos { get; set;} = null!;
 
     public DbSet<Cliente> Clientes { get; set; } = null!;
+
+public DbSet<Ventas> Ventas { get; set; } = default!;
+
+
+      public DbSet<DetalleVenta> DetalleVentas { get; set; } = null!;
 }

@@ -242,6 +242,6 @@ function mensajesError(id, data, mensaje) {
     $(id).attr("hidden", false);
 }
 
-{}
+
 
 
