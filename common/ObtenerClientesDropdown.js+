@@ -1,0 +1,39 @@
+function ObtenerClientesDropdown() {
+    fetch('https://localhost:7245/Clientes')
+    .then(response => response.json())
+    .then(async data => {
+        // CompletarDropdownClientes(data);
+        localStorage.setItem("clientes", JSON.stringify(data));
+    })
+    .catch(error => console.log("No se pudo acceder al servicio.", error));
+}
+
+
+
+
+function FiltrarDropdownClientes(clientes, todosLosClientes) {
+    todosLosClientes = JSON.parse(todasLosClientes);
+
+    if (clientes != null) {
+        $('#clientessId').empty();
+
+        const clientesFiltrados = todosLosClientes.filter(todosLosClientesItem => 
+            !clientes.find(clientesItem => clientesItem.clientesId ===  todosLosClientesItem.id)
+        );
+
+        console.log("Clientes filtrados: ", clientesFiltrados);
+
+        $.each(clientesFiltrados, function(index, item) {
+            $('#ClientesId').append(
+                "<option value='"+ item.id + "'>" + item.nombreCliente + "</option>"            
+            )
+        })
+    }
+    else {
+        $.each(todosLosClientes, function(index, item) {
+            $('#ClientesId').append(
+                "<option value='"+ item.id + "'>" + item.nombreCliente + "</option>"            
+            )
+        })
+    }
+}

@@ -73,16 +73,8 @@ namespace VentaProductos.Controllers
         }
 
         // POST: api/Ventas
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Ventas>> PostVentas(Ventas ventas)
-        {
-            _context.Ventas.Add(ventas);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetVentas", new { id = ventas.Id }, ventas);
-        }
-
+    
+       [HttpPost]
         // DELETE: api/Ventas/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVentas(int id)

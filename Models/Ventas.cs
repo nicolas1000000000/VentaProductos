@@ -13,5 +13,8 @@ public bool? Finalizada {get; set;}
 
    public int IdCliente {get; set;}  
 
+
+public virtual ICollection<Cliente>? Clientes { get; set; }
+
 public virtual ICollection<DetalleVenta>? DetalleVentas { get; set; }
 }
